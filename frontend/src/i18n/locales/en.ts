@@ -107,6 +107,60 @@ export default {
     },
     footer: {
       allRightsReserved: 'All rights reserved.'
+    },
+    health: {
+      title: 'Model Health',
+      description: 'Real-time platform availability',
+      lastUpdated: 'Updated at',
+      available: 'Available',
+      rateLimited: 'Rate limited',
+      errored: 'Errored',
+      ofTotal: 'of {total} total',
+      status: {
+        healthy: 'Healthy',
+        degraded: 'Degraded',
+        down: 'Down',
+        unknown: 'Unknown'
+      }
+    },
+    plans: {
+      title: 'Subscription Plans',
+      description: 'Pick a plan that matches your usage',
+      subscribe: 'Subscribe',
+      validity: {
+        day: 'days',
+        days: 'days',
+        week: 'weeks',
+        weeks: 'weeks',
+        month: 'months',
+        months: 'months',
+        year: 'years',
+        years: 'years'
+      }
+    },
+    lines: {
+      title: 'Server Lines',
+      description: 'Choose the best route for your network',
+      useLine: 'Use this line',
+      selected: 'Selected',
+      latency: 'Latency',
+      region: {
+        cn: 'Mainland China',
+        hk: 'Hong Kong',
+        tw: 'Taiwan',
+        jp: 'Japan',
+        sg: 'Singapore',
+        us: 'United States',
+        eu: 'Europe',
+        intl: 'International',
+        global: 'Global'
+      },
+      status: {
+        healthy: 'Online',
+        degraded: 'Degraded',
+        down: 'Offline',
+        unknown: 'Unknown'
+      }
     }
   },
 
@@ -362,7 +416,8 @@ export default {
     orderManagement: 'Orders',
     paymentDashboard: 'Payment Dashboard',
     paymentConfig: 'Payment Config',
-    paymentPlans: 'Plans'
+    paymentPlans: 'Plans',
+    serverLines: 'Server Lines'
   },
 
   // Auth
@@ -3399,6 +3454,40 @@ export default {
       failedToUpdate: 'Failed to update promo code',
       failedToDelete: 'Failed to delete promo code',
       failedToLoadUsages: 'Failed to load usage records'
+    },
+
+    // Server Lines
+    serverLines: {
+      title: 'Server Lines',
+      description: 'Configure the user-selectable gateway endpoints shown on the homepage',
+      addLine: 'Add Line',
+      probeNow: 'Probe Now',
+      empty: 'No server lines configured yet. Click "Add Line" to create one.',
+      saveHint: 'Changes are only persisted after clicking "Save".',
+      moveUp: 'Move up',
+      moveDown: 'Move down',
+      remove: 'Remove',
+      fields: {
+        id: 'ID',
+        name: 'Display Name',
+        region: 'Region',
+        url: 'Base URL',
+        probePath: 'Probe Path',
+        description: 'Description',
+        sortOrder: 'Sort Order',
+        enabled: 'Enabled'
+      },
+      placeholders: {
+        id: 'unique-id',
+        name: 'China Premium Line',
+        description: 'Low-latency line for mainland users'
+      },
+      status: {
+        healthy: 'Online',
+        degraded: 'Degraded',
+        down: 'Offline',
+        unknown: 'Unknown'
+      }
     },
 
     // Usage Records

@@ -369,6 +369,244 @@
             >
           </div>
         </div>
+
+        <!-- Section: Model Health Status -->
+        <section v-if="health.enabled && health.platforms.length" class="mb-16">
+          <div class="mb-6 text-center">
+            <h2 class="mb-2 text-2xl font-bold text-gray-900 dark:text-white">
+              {{ t('home.health.title') }}
+            </h2>
+            <p class="text-sm text-gray-600 dark:text-dark-400">
+              {{ t('home.health.description') }}
+              <span v-if="health.collected_at" class="text-xs text-gray-400 dark:text-dark-500">
+                · {{ t('home.health.lastUpdated') }} {{ formatTime(health.collected_at) }}
+              </span>
+            </p>
+          </div>
+          <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div
+              v-for="item in health.platforms"
+              :key="item.platform"
+              class="relative rounded-2xl border border-gray-200/50 bg-white/70 p-5 backdrop-blur-sm dark:border-dark-700/50 dark:bg-dark-800/70"
+            >
+              <div class="mb-3 flex items-center justify-between">
+                <h3 class="text-base font-semibold text-gray-900 dark:text-white">
+                  {{ item.display_name }}
+                </h3>
+                <span
+                  class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium"
+                  :class="healthBadgeClass(item.status)"
+                >
+                  <span
+                    class="h-1.5 w-1.5 rounded-full"
+                    :class="healthDotClass(item.status)"
+                  ></span>
+                  {{ t('home.health.status.' + item.status) }}
+                </span>
+              </div>
+              <div class="grid grid-cols-3 gap-2 text-center">
+                <div>
+                  <div class="text-lg font-semibold text-gray-900 dark:text-white">
+                    {{ item.available_count }}
+                  </div>
+                  <div class="text-[11px] text-gray-500 dark:text-dark-400">
+                    {{ t('home.health.available') }}
+                  </div>
+                </div>
+                <div>
+                  <div class="text-lg font-semibold text-amber-500">
+                    {{ item.rate_limit_count }}
+                  </div>
+                  <div class="text-[11px] text-gray-500 dark:text-dark-400">
+                    {{ t('home.health.rateLimited') }}
+                  </div>
+                </div>
+                <div>
+                  <div class="text-lg font-semibold text-rose-500">
+                    {{ item.error_count }}
+                  </div>
+                  <div class="text-[11px] text-gray-500 dark:text-dark-400">
+                    {{ t('home.health.errored') }}
+                  </div>
+                </div>
+              </div>
+              <div class="mt-3 h-1.5 overflow-hidden rounded-full bg-gray-100 dark:bg-dark-700">
+                <div
+                  class="h-full rounded-full transition-all"
+                  :class="healthBarClass(item.status)"
+                  :style="{ width: healthRatio(item) + '%' }"
+                ></div>
+              </div>
+              <div class="mt-2 text-right text-[11px] text-gray-400 dark:text-dark-500">
+                {{ t('home.health.ofTotal', { total: item.total_accounts }) }}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section: Subscription Plans -->
+        <section v-if="plans.length" class="mb-16">
+          <div class="mb-6 text-center">
+            <h2 class="mb-2 text-2xl font-bold text-gray-900 dark:text-white">
+              {{ t('home.plans.title') }}
+            </h2>
+            <p class="text-sm text-gray-600 dark:text-dark-400">
+              {{ t('home.plans.description') }}
+            </p>
+          </div>
+          <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            <div
+              v-for="plan in plans"
+              :key="plan.id"
+              class="group flex flex-col rounded-2xl border border-gray-200/60 bg-white/80 p-6 shadow-sm backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-primary-500/10 dark:border-dark-700/60 dark:bg-dark-800/80"
+            >
+              <div class="mb-3 flex items-center justify-between">
+                <span
+                  class="rounded-md bg-primary-100 px-2 py-0.5 text-[11px] font-medium uppercase tracking-wide text-primary-700 dark:bg-primary-900/30 dark:text-primary-300"
+                >
+                  {{ plan.group_platform || plan.group_name }}
+                </span>
+                <span
+                  v-if="plan.rate_multiplier && plan.rate_multiplier !== 1"
+                  class="text-[11px] text-gray-500 dark:text-dark-400"
+                >
+                  × {{ plan.rate_multiplier }}
+                </span>
+              </div>
+              <h3 class="mb-1 text-lg font-semibold text-gray-900 dark:text-white">
+                {{ plan.name }}
+              </h3>
+              <p
+                v-if="plan.description"
+                class="mb-4 text-sm text-gray-600 dark:text-dark-400"
+              >
+                {{ plan.description }}
+              </p>
+              <div class="mb-4 flex items-baseline gap-2">
+                <span class="text-3xl font-bold text-gray-900 dark:text-white">
+                  ¥{{ formatPrice(plan.price) }}
+                </span>
+                <span
+                  v-if="plan.original_price && plan.original_price > plan.price"
+                  class="text-sm text-gray-400 line-through"
+                >
+                  ¥{{ formatPrice(plan.original_price) }}
+                </span>
+                <span class="text-xs text-gray-500 dark:text-dark-400">
+                  / {{ plan.validity_days }} {{ planValidityUnit(plan) }}
+                </span>
+              </div>
+              <ul
+                v-if="plan.features.length"
+                class="mb-4 space-y-1.5 text-sm text-gray-600 dark:text-dark-400"
+              >
+                <li
+                  v-for="(feat, idx) in plan.features.slice(0, 4)"
+                  :key="idx"
+                  class="flex items-start gap-2"
+                >
+                  <Icon name="check" size="sm" class="mt-0.5 shrink-0 text-primary-500" />
+                  <span>{{ feat }}</span>
+                </li>
+              </ul>
+              <div class="mt-auto">
+                <router-link
+                  :to="isAuthenticated ? '/payment/checkout?plan_id=' + plan.id : '/login'"
+                  class="btn btn-primary w-full"
+                >
+                  {{ t('home.plans.subscribe') }}
+                </router-link>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section: Server Lines -->
+        <section v-if="serverLines.length" class="mb-16">
+          <div class="mb-6 text-center">
+            <h2 class="mb-2 text-2xl font-bold text-gray-900 dark:text-white">
+              {{ t('home.lines.title') }}
+            </h2>
+            <p class="text-sm text-gray-600 dark:text-dark-400">
+              {{ t('home.lines.description') }}
+            </p>
+          </div>
+          <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div
+              v-for="line in serverLines"
+              :key="line.id"
+              class="group relative flex flex-col rounded-2xl border p-5 backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl"
+              :class="
+                selectedLineId === line.id
+                  ? 'border-primary-400 bg-primary-50/60 ring-2 ring-primary-400/50 dark:border-primary-500 dark:bg-primary-900/20'
+                  : 'border-gray-200/60 bg-white/70 dark:border-dark-700/60 dark:bg-dark-800/70'
+              "
+            >
+              <div class="mb-3 flex items-start justify-between gap-3">
+                <div class="flex items-center gap-2">
+                  <span class="text-2xl leading-none">{{ regionEmoji(line.region) }}</span>
+                  <div>
+                    <h3 class="text-base font-semibold text-gray-900 dark:text-white">
+                      {{ line.name }}
+                    </h3>
+                    <p class="text-[11px] uppercase tracking-wide text-gray-500 dark:text-dark-400">
+                      {{ regionLabel(line.region) }}
+                    </p>
+                  </div>
+                </div>
+                <span
+                  class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium"
+                  :class="lineBadgeClass(line.status)"
+                >
+                  <span class="h-1.5 w-1.5 rounded-full" :class="lineDotClass(line.status)"></span>
+                  {{ t('home.lines.status.' + line.status) }}
+                </span>
+              </div>
+              <p
+                v-if="line.description"
+                class="mb-3 text-sm text-gray-600 dark:text-dark-400"
+              >
+                {{ line.description }}
+              </p>
+              <div class="mb-4 flex items-center justify-between text-sm">
+                <span class="text-gray-500 dark:text-dark-400">
+                  {{ t('home.lines.latency') }}
+                </span>
+                <span
+                  class="font-mono font-medium"
+                  :class="latencyColorClass(line.latency_ms, line.status)"
+                >
+                  {{ line.status === 'unknown' ? '—' : line.latency_ms + ' ms' }}
+                </span>
+              </div>
+              <div class="mt-auto flex items-center gap-2">
+                <button
+                  type="button"
+                  class="btn btn-secondary flex-1 text-xs"
+                  :class="{
+                    'btn-primary': selectedLineId === line.id
+                  }"
+                  @click="selectLine(line)"
+                >
+                  {{
+                    selectedLineId === line.id
+                      ? t('home.lines.selected')
+                      : t('home.lines.useLine')
+                  }}
+                </button>
+                <a
+                  :href="line.url"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="rounded-lg border border-gray-200 p-2 text-gray-500 transition-colors hover:bg-gray-50 dark:border-dark-700 dark:text-dark-400 dark:hover:bg-dark-700/50"
+                  :title="line.url"
+                >
+                  <Icon name="link" size="sm" />
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
       </div>
     </main>
 
@@ -405,13 +643,21 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount, reactive } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAuthStore, useAppStore } from '@/stores'
 import LocaleSwitcher from '@/components/common/LocaleSwitcher.vue'
 import Icon from '@/components/icons/Icon.vue'
+import {
+  publicAPI,
+  type PublicPlan,
+  type PublicHealthResponse,
+  type PublicServerLine,
+  type PlatformHealthStatus,
+  type ServerLineStatus
+} from '@/api/public'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 
 const authStore = useAuthStore()
 const appStore = useAppStore()
@@ -467,6 +713,195 @@ function initTheme() {
   }
 }
 
+// ---- Homepage dynamic sections: health / plans / server lines ----
+
+const health = reactive<PublicHealthResponse>({
+  enabled: false,
+  collected_at: undefined,
+  platforms: []
+})
+
+const plans = ref<PublicPlan[]>([])
+const serverLines = ref<PublicServerLine[]>([])
+const selectedLineId = ref<string>(localStorage.getItem('preferredServerLine') || '')
+
+let healthTimer: ReturnType<typeof setInterval> | null = null
+let linesTimer: ReturnType<typeof setInterval> | null = null
+
+async function loadHealth() {
+  try {
+    const resp = await publicAPI.getModelHealth()
+    const data = (resp.data ?? resp) as unknown as PublicHealthResponse
+    health.enabled = Boolean(data.enabled)
+    health.collected_at = data.collected_at
+    health.platforms = data.platforms ?? []
+  } catch {
+    // Public endpoint, ignore transient failures.
+  }
+}
+
+async function loadPlans() {
+  try {
+    const resp = await publicAPI.getPlans()
+    const data = (resp.data ?? resp) as unknown as PublicPlan[]
+    plans.value = Array.isArray(data) ? data : []
+  } catch {
+    plans.value = []
+  }
+}
+
+async function loadServerLines() {
+  try {
+    const resp = await publicAPI.getServerLines()
+    const data = (resp.data ?? resp) as unknown as PublicServerLine[]
+    serverLines.value = Array.isArray(data) ? data : []
+    if (selectedLineId.value && !serverLines.value.some((l) => l.id === selectedLineId.value)) {
+      selectedLineId.value = ''
+      localStorage.removeItem('preferredServerLine')
+    }
+  } catch {
+    serverLines.value = []
+  }
+}
+
+function selectLine(line: PublicServerLine) {
+  if (selectedLineId.value === line.id) {
+    selectedLineId.value = ''
+    localStorage.removeItem('preferredServerLine')
+    return
+  }
+  selectedLineId.value = line.id
+  try {
+    localStorage.setItem('preferredServerLine', line.id)
+    localStorage.setItem('preferredServerLineUrl', line.url)
+  } catch {
+    // ignore quota errors
+  }
+}
+
+function healthBadgeClass(status: PlatformHealthStatus): string {
+  switch (status) {
+    case 'healthy':
+      return 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300'
+    case 'degraded':
+      return 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300'
+    case 'down':
+      return 'bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-300'
+    default:
+      return 'bg-gray-100 text-gray-600 dark:bg-dark-700 dark:text-dark-300'
+  }
+}
+
+function healthDotClass(status: PlatformHealthStatus): string {
+  switch (status) {
+    case 'healthy':
+      return 'bg-emerald-500'
+    case 'degraded':
+      return 'bg-amber-500'
+    case 'down':
+      return 'bg-rose-500'
+    default:
+      return 'bg-gray-400'
+  }
+}
+
+function healthBarClass(status: PlatformHealthStatus): string {
+  switch (status) {
+    case 'healthy':
+      return 'bg-emerald-500'
+    case 'degraded':
+      return 'bg-amber-500'
+    case 'down':
+      return 'bg-rose-500'
+    default:
+      return 'bg-gray-300 dark:bg-dark-600'
+  }
+}
+
+function healthRatio(item: { available_count: number; total_accounts: number }): number {
+  if (!item.total_accounts) return 0
+  return Math.min(100, Math.round((item.available_count / item.total_accounts) * 100))
+}
+
+function lineBadgeClass(status: ServerLineStatus): string {
+  return healthBadgeClass(status as PlatformHealthStatus)
+}
+
+function lineDotClass(status: ServerLineStatus): string {
+  return healthDotClass(status as PlatformHealthStatus)
+}
+
+function latencyColorClass(latency: number, status: ServerLineStatus): string {
+  if (status === 'down' || status === 'unknown') return 'text-rose-500'
+  if (latency >= 1000) return 'text-amber-500'
+  if (latency >= 400) return 'text-amber-600'
+  return 'text-emerald-600 dark:text-emerald-400'
+}
+
+function regionEmoji(region: string): string {
+  const key = (region || '').toLowerCase()
+  switch (key) {
+    case 'cn':
+    case 'china':
+    case 'domestic':
+      return '🇨🇳'
+    case 'hk':
+      return '🇭🇰'
+    case 'tw':
+      return '🇹🇼'
+    case 'jp':
+      return '🇯🇵'
+    case 'sg':
+      return '🇸🇬'
+    case 'us':
+    case 'usa':
+      return '🇺🇸'
+    case 'eu':
+      return '🇪🇺'
+    case 'intl':
+    case 'global':
+    case 'international':
+      return '🌐'
+    default:
+      return '🌐'
+  }
+}
+
+function regionLabel(region: string): string {
+  const key = (region || '').toLowerCase()
+  const known = ['cn', 'hk', 'tw', 'jp', 'sg', 'us', 'eu', 'intl', 'global']
+  if (known.includes(key)) {
+    return t('home.lines.region.' + key)
+  }
+  return region
+}
+
+function formatPrice(value: number | null | undefined): string {
+  if (value == null) return '0'
+  if (Number.isInteger(value)) return String(value)
+  return value.toFixed(2)
+}
+
+function planValidityUnit(plan: PublicPlan): string {
+  const unit = (plan.validity_unit || 'day').toLowerCase()
+  const key = 'home.plans.validity.' + unit
+  const translated = t(key)
+  return translated === key ? unit : translated
+}
+
+function formatTime(value?: string): string {
+  if (!value) return ''
+  try {
+    const d = new Date(value)
+    return d.toLocaleTimeString(locale.value || undefined, {
+      hour: '2-digit',
+      minute: '2-digit'
+    })
+  } catch {
+    return value
+  }
+}
+
 onMounted(() => {
   initTheme()
 
@@ -477,6 +912,19 @@ onMounted(() => {
   if (!appStore.publicSettingsLoaded) {
     appStore.fetchPublicSettings()
   }
+
+  // Load dynamic homepage sections (best-effort, public endpoints).
+  loadHealth()
+  loadPlans()
+  loadServerLines()
+
+  healthTimer = setInterval(loadHealth, 60_000)
+  linesTimer = setInterval(loadServerLines, 90_000)
+})
+
+onBeforeUnmount(() => {
+  if (healthTimer) clearInterval(healthTimer)
+  if (linesTimer) clearInterval(linesTimer)
 })
 </script>
 

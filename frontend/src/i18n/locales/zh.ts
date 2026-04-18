@@ -107,6 +107,60 @@ export default {
     },
     footer: {
       allRightsReserved: '保留所有权利。'
+    },
+    health: {
+      title: '模型健康状态',
+      description: '各平台实时可用性',
+      lastUpdated: '更新于',
+      available: '可用',
+      rateLimited: '限流',
+      errored: '异常',
+      ofTotal: '共 {total} 个',
+      status: {
+        healthy: '健康',
+        degraded: '降级',
+        down: '故障',
+        unknown: '未知'
+      }
+    },
+    plans: {
+      title: '套餐推荐',
+      description: '选择最适合你的订阅方案',
+      subscribe: '立即订阅',
+      validity: {
+        day: '天',
+        days: '天',
+        week: '周',
+        weeks: '周',
+        month: '个月',
+        months: '个月',
+        year: '年',
+        years: '年'
+      }
+    },
+    lines: {
+      title: '服务器线路',
+      description: '为你的网络选择最合适的线路',
+      useLine: '使用此线路',
+      selected: '已选',
+      latency: '延迟',
+      region: {
+        cn: '中国大陆',
+        hk: '中国香港',
+        tw: '中国台湾',
+        jp: '日本',
+        sg: '新加坡',
+        us: '美国',
+        eu: '欧洲',
+        intl: '国际',
+        global: '全球'
+      },
+      status: {
+        healthy: '在线',
+        degraded: '降级',
+        down: '离线',
+        unknown: '未知'
+      }
     }
   },
 
@@ -362,7 +416,8 @@ export default {
     orderManagement: '订单管理',
     paymentDashboard: '支付概览',
     paymentConfig: '支付配置',
-    paymentPlans: '订阅套餐'
+    paymentPlans: '订阅套餐',
+    serverLines: '服务器线路'
   },
 
   // Auth
@@ -3557,6 +3612,40 @@ export default {
       failedToUpdate: '更新优惠码失败',
       failedToDelete: '删除优惠码失败',
       failedToLoadUsages: '加载使用记录失败'
+    },
+
+    // Server Lines
+    serverLines: {
+      title: '服务器线路管理',
+      description: '配置首页展示给用户的网关线路',
+      addLine: '新增线路',
+      probeNow: '立即检测',
+      empty: '暂无线路配置，点击"新增线路"开始配置。',
+      saveHint: '修改后请点击"保存"以生效。',
+      moveUp: '上移',
+      moveDown: '下移',
+      remove: '删除',
+      fields: {
+        id: '标识',
+        name: '显示名称',
+        region: '区域',
+        url: '基础 URL',
+        probePath: '探测路径',
+        description: '描述',
+        sortOrder: '排序',
+        enabled: '启用'
+      },
+      placeholders: {
+        id: 'unique-id',
+        name: '国内优质线路',
+        description: '面向大陆用户的低延迟线路'
+      },
+      status: {
+        healthy: '在线',
+        degraded: '降级',
+        down: '离线',
+        unknown: '未知'
+      }
     },
 
     // Usage Records

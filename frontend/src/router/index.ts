@@ -443,6 +443,18 @@ const routes: RouteRecordRaw[] = [
       descriptionKey: 'admin.usage.description'
     }
   },
+  {
+    path: '/admin/server-lines',
+    name: 'AdminServerLines',
+    component: () => import('@/views/admin/ServerLinesView.vue'),
+    meta: {
+      requiresAuth: true,
+      requiresAdmin: true,
+      title: 'Server Lines',
+      titleKey: 'admin.serverLines.title',
+      descriptionKey: 'admin.serverLines.description'
+    }
+  },
 
 
   // ==================== Payment Admin Routes ====================

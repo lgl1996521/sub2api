@@ -88,6 +88,18 @@ func RegisterAdminRoutes(
 
 		// 渠道管理
 		registerChannelRoutes(admin, h)
+
+		// 服务器线路管理
+		registerServerLinesRoutes(admin, h)
+	}
+}
+
+func registerServerLinesRoutes(admin *gin.RouterGroup, h *handler.Handlers) {
+	lines := admin.Group("/server-lines")
+	{
+		lines.GET("", h.Admin.ServerLines.List)
+		lines.GET("/status", h.Admin.ServerLines.ListWithStatus)
+		lines.PUT("", h.Admin.ServerLines.Save)
 	}
 }
 

@@ -1,4 +1,49 @@
 export default {
+  // Public (marketing) header shared across home / models / lines
+  publicHeader: {
+    home: 'Home',
+    models: 'Models',
+    modelStatus: 'Model Status',
+    plans: 'Plans',
+    lines: 'Lines',
+    docs: 'Docs',
+    signUp: 'Sign up',
+    toggleMenu: 'Toggle menu'
+  },
+  // Models page (/models) - pricing catalog
+  models: {
+    plaza: {
+      title: 'Model Plaza',
+      subtitle: 'Browse available AI models and their pricing',
+      refresh: 'Refresh',
+      totalCount: 'Total models'
+    },
+    empty: 'No model data yet. Enable realtime monitoring or set SEED_DEMO=true to preview.',
+    filter: {
+      all: 'All',
+      status: 'Status',
+      healthy: 'Healthy',
+      degraded: 'Degraded',
+      down: 'Down'
+    },
+    card: {
+      input: 'Input',
+      output: 'Output',
+      cacheRead: 'Cache read',
+      unit: 'USD per 1M tokens',
+      copyModelName: 'Copy model name',
+      copied: 'Copied',
+      availability: 'Availability',
+      latency: 'Avg latency',
+      ttft: 'TTFT',
+      recent: 'Recent 60 samples',
+      recentWindow: '1 sample per minute',
+      statusNormal: 'Normal',
+      statusDegraded: 'Degraded',
+      statusDown: 'Down'
+    },
+    refreshed: 'Last refreshed: {time}'
+  },
   // Home Page
   home: {
     viewOnGithub: 'View on GitHub',
@@ -144,6 +189,11 @@ export default {
       useLine: 'Use this line',
       selected: 'Selected',
       latency: 'Latency',
+      uptime: 'Uptime',
+      recentProbes: 'Recent probes',
+      probeUp: 'Probe OK',
+      probeDown: 'Probe failed',
+      probeUnknown: 'No data',
       region: {
         cn: 'Mainland China',
         hk: 'Hong Kong',

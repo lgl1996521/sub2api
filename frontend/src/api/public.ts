@@ -40,13 +40,46 @@ export interface PublicHealthItem {
   status: PlatformHealthStatus
 }
 
+export interface PublicModelPricing {
+  /** Price per 1M input tokens, CNY. */
+  input_cny: number
+  input_usd: number
+  output_cny: number
+  output_usd: number
+  cache_read_cny: number
+  cache_read_usd: number
+}
+
+export interface PublicModelItem {
+  model_name: string
+  platform: string
+  display_name: string
+  description?: string
+  release_date?: string
+  tags?: string[]
+  pricing: PublicModelPricing
+  status: PlatformHealthStatus
+  availability_pct: number
+  avg_latency_ms: number
+  ttft_ms?: number
+  /** Newest-first array of 1 (healthy) / 0 (down) samples, up to 60 entries. */
+  recent_samples: number[]
+}
+
 export interface PublicHealthResponse {
   enabled: boolean
   collected_at?: string
   platforms: PublicHealthItem[]
+  models?: PublicModelItem[]
 }
 
 export type ServerLineStatus = 'healthy' | 'degraded' | 'down' | 'unknown'
+
+export interface ServerLineProbeSample {
+  status: ServerLineStatus
+  latency_ms: number
+  checked_at: string
+}
 
 export interface PublicServerLine {
   id: string
@@ -61,6 +94,8 @@ export interface PublicServerLine {
   latency_ms: number
   checked_at: string
   error?: string
+  /** Newest-first rolling window of probe history (up to 60 entries). */
+  recent_samples: ServerLineProbeSample[]
 }
 
 export const publicAPI = {

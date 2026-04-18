@@ -39,13 +39,22 @@ type ServerLine struct {
 	Enabled     bool   `json:"enabled"`
 }
 
-// ServerLineWithStatus enriches a ServerLine with the latest probe result.
-type ServerLineWithStatus struct {
-	ServerLine
+// ServerLineProbeSample is one entry in the rolling history of probe results.
+type ServerLineProbeSample struct {
 	Status    ServerLineStatus `json:"status"`
 	LatencyMS int64            `json:"latency_ms"`
 	CheckedAt time.Time        `json:"checked_at"`
-	Error     string           `json:"error,omitempty"`
+}
+
+// ServerLineWithStatus enriches a ServerLine with the latest probe result and
+// a short rolling window of previous samples (newest first).
+type ServerLineWithStatus struct {
+	ServerLine
+	Status        ServerLineStatus        `json:"status"`
+	LatencyMS     int64                   `json:"latency_ms"`
+	CheckedAt     time.Time               `json:"checked_at"`
+	Error         string                  `json:"error,omitempty"`
+	RecentSamples []ServerLineProbeSample `json:"recent_samples"`
 }
 
 // serverLineProbeCache caches the most recent probe snapshot for a given line.
@@ -56,15 +65,20 @@ type serverLineProbeCache struct {
 	checkedAt time.Time
 }
 
+// serverLineProbeHistorySize is the maximum number of probe samples retained
+// per line for the homepage/admin "recent status" strip.
+const serverLineProbeHistorySize = 60
+
 // ServerLinesService persists server line definitions via the generic Setting
 // key/value store so that no schema migration is required.
 type ServerLinesService struct {
 	settingRepo SettingRepository
 	httpClient  *http.Client
 
-	mu         sync.RWMutex
-	probeCache map[string]serverLineProbeCache
-	probeTTL   time.Duration
+	mu           sync.RWMutex
+	probeCache   map[string]serverLineProbeCache
+	probeHistory map[string][]ServerLineProbeSample
+	probeTTL     time.Duration
 }
 
 // NewServerLinesService constructs a ServerLinesService with default timeouts.
@@ -74,8 +88,9 @@ func NewServerLinesService(settingRepo SettingRepository) *ServerLinesService {
 		httpClient: &http.Client{
 			Timeout: 5 * time.Second,
 		},
-		probeCache: map[string]serverLineProbeCache{},
-		probeTTL:   60 * time.Second,
+		probeCache:   map[string]serverLineProbeCache{},
+		probeHistory: map[string][]ServerLineProbeSample{},
+		probeTTL:     60 * time.Second,
 	}
 }
 
@@ -180,16 +195,31 @@ func (s *ServerLinesService) ListWithStatus(ctx context.Context) ([]ServerLineWi
 			defer wg.Done()
 			probe := s.probe(ctx, line)
 			out[idx] = ServerLineWithStatus{
-				ServerLine: line,
-				Status:     probe.status,
-				LatencyMS:  probe.latency.Milliseconds(),
-				CheckedAt:  probe.checkedAt,
-				Error:      probe.err,
+				ServerLine:    line,
+				Status:        probe.status,
+				LatencyMS:     probe.latency.Milliseconds(),
+				CheckedAt:     probe.checkedAt,
+				Error:         probe.err,
+				RecentSamples: s.historySnapshot(line.ID),
 			}
 		}(i, lines[i])
 	}
 	wg.Wait()
 	return out, nil
+}
+
+// historySnapshot returns a copy of the rolling probe history for a line,
+// ordered newest first.
+func (s *ServerLinesService) historySnapshot(id string) []ServerLineProbeSample {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+	src := s.probeHistory[id]
+	if len(src) == 0 {
+		return []ServerLineProbeSample{}
+	}
+	out := make([]ServerLineProbeSample, len(src))
+	copy(out, src)
+	return out
 }
 
 // probe performs a HEAD/GET request against ProbePath and returns a cached
@@ -255,9 +285,20 @@ func (s *ServerLinesService) probe(ctx context.Context, line ServerLine) serverL
 }
 
 func (s *ServerLinesService) storeProbe(id string, p serverLineProbeCache) {
+	sample := ServerLineProbeSample{
+		Status:    p.status,
+		LatencyMS: p.latency.Milliseconds(),
+		CheckedAt: p.checkedAt,
+	}
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	s.probeCache[id] = p
+	hist := s.probeHistory[id]
+	hist = append([]ServerLineProbeSample{sample}, hist...)
+	if len(hist) > serverLineProbeHistorySize {
+		hist = hist[:serverLineProbeHistorySize]
+	}
+	s.probeHistory[id] = hist
 }
 
 func sortServerLines(lines []ServerLine) {

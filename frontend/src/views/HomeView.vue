@@ -36,79 +36,8 @@
       ></div>
     </div>
 
-    <!-- Header -->
-    <header class="relative z-20 px-6 py-4">
-      <nav class="mx-auto flex max-w-6xl items-center justify-between">
-        <!-- Logo -->
-        <div class="flex items-center">
-          <div class="h-10 w-10 overflow-hidden rounded-xl shadow-md">
-            <img :src="siteLogo || '/logo.png'" alt="Logo" class="h-full w-full object-contain" />
-          </div>
-        </div>
-
-        <!-- Nav Actions -->
-        <div class="flex items-center gap-3">
-          <!-- Language Switcher -->
-          <LocaleSwitcher />
-
-          <!-- Doc Link -->
-          <a
-            v-if="docUrl"
-            :href="docUrl"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="rounded-lg p-2 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-700 dark:text-dark-400 dark:hover:bg-dark-800 dark:hover:text-white"
-            :title="t('home.viewDocs')"
-          >
-            <Icon name="book" size="md" />
-          </a>
-
-          <!-- Theme Toggle -->
-          <button
-            @click="toggleTheme"
-            class="rounded-lg p-2 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-700 dark:text-dark-400 dark:hover:bg-dark-800 dark:hover:text-white"
-            :title="isDark ? t('home.switchToLight') : t('home.switchToDark')"
-          >
-            <Icon v-if="isDark" name="sun" size="md" />
-            <Icon v-else name="moon" size="md" />
-          </button>
-
-          <!-- Login / Dashboard Button -->
-          <router-link
-            v-if="isAuthenticated"
-            :to="dashboardPath"
-            class="inline-flex items-center gap-1.5 rounded-full bg-gray-900 py-1 pl-1 pr-2.5 transition-colors hover:bg-gray-800 dark:bg-gray-800 dark:hover:bg-gray-700"
-          >
-            <span
-              class="flex h-5 w-5 items-center justify-center rounded-full bg-gradient-to-br from-primary-400 to-primary-600 text-[10px] font-semibold text-white"
-            >
-              {{ userInitial }}
-            </span>
-            <span class="text-xs font-medium text-white">{{ t('home.dashboard') }}</span>
-            <svg
-              class="h-3 w-3 text-gray-400"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"
-              />
-            </svg>
-          </router-link>
-          <router-link
-            v-else
-            to="/login"
-            class="inline-flex items-center rounded-full bg-gray-900 px-3 py-1 text-xs font-medium text-white transition-colors hover:bg-gray-800 dark:bg-gray-800 dark:hover:bg-gray-700"
-          >
-            {{ t('home.login') }}
-          </router-link>
-        </div>
-      </nav>
-    </header>
+    <!-- Header (shared PublicHeader with nav links) -->
+    <PublicHeader />
 
     <!-- Main Content -->
     <main class="relative z-10 flex-1 px-6 py-16">
@@ -174,6 +103,28 @@
               </div>
             </div>
           </div>
+        </div>
+
+        <!-- Provider Icon Marquee (supported model providers) -->
+        <div class="provider-marquee relative mb-10 overflow-hidden rounded-2xl border border-gray-200/40 bg-white/40 py-4 backdrop-blur-sm dark:border-dark-700/40 dark:bg-dark-800/40">
+          <div class="provider-marquee-track flex w-max items-center gap-10 px-6">
+            <template v-for="n in 2" :key="'set-' + n">
+              <div
+                v-for="p in providerStrip"
+                :key="'p-' + n + '-' + p.key"
+                class="flex shrink-0 items-center gap-2 text-gray-600 dark:text-dark-300"
+              >
+                <ProviderIcon :provider="p.key" size="sm" />
+                <span class="text-sm font-medium">{{ p.label }}</span>
+              </div>
+            </template>
+          </div>
+          <div
+            class="pointer-events-none absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-gray-50 to-transparent dark:from-dark-950"
+          ></div>
+          <div
+            class="pointer-events-none absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-gray-50 to-transparent dark:from-dark-950"
+          ></div>
         </div>
 
         <!-- Feature Tags - Centered -->
@@ -371,7 +322,7 @@
         </div>
 
         <!-- Section: Model Health Status -->
-        <section v-if="health.enabled && health.platforms.length" class="mb-16">
+        <section id="health" v-if="health.enabled && health.platforms.length" class="mb-16 scroll-mt-24">
           <div class="mb-6 text-center">
             <h2 class="mb-2 text-2xl font-bold text-gray-900 dark:text-white">
               {{ t('home.health.title') }}
@@ -445,7 +396,7 @@
         </section>
 
         <!-- Section: Subscription Plans -->
-        <section v-if="plans.length" class="mb-16">
+        <section id="plans" v-if="plans.length" class="mb-16 scroll-mt-24">
           <div class="mb-6 text-center">
             <h2 class="mb-2 text-2xl font-bold text-gray-900 dark:text-white">
               {{ t('home.plans.title') }}
@@ -521,8 +472,8 @@
           </div>
         </section>
 
-        <!-- Section: Server Lines -->
-        <section v-if="serverLines.length" class="mb-16">
+        <!-- Section: Server Lines (redesigned, nowcoding.ai-style) -->
+        <section id="lines" v-if="serverLines.length" class="mb-16 scroll-mt-24">
           <div class="mb-6 text-center">
             <h2 class="mb-2 text-2xl font-bold text-gray-900 dark:text-white">
               {{ t('home.lines.title') }}
@@ -531,80 +482,131 @@
               {{ t('home.lines.description') }}
             </p>
           </div>
-          <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            <div
+          <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            <button
               v-for="line in serverLines"
               :key="line.id"
-              class="group relative flex flex-col rounded-2xl border p-5 backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl"
+              type="button"
+              class="group relative flex flex-col rounded-2xl p-[1.5px] text-left transition-all duration-300 hover:-translate-y-0.5"
               :class="
                 selectedLineId === line.id
-                  ? 'border-primary-400 bg-primary-50/60 ring-2 ring-primary-400/50 dark:border-primary-500 dark:bg-primary-900/20'
-                  : 'border-gray-200/60 bg-white/70 dark:border-dark-700/60 dark:bg-dark-800/70'
+                  ? 'bg-gradient-to-br from-primary-500 to-brand-500 shadow-lg shadow-primary-500/20'
+                  : 'bg-gray-200/70 hover:bg-gradient-to-br hover:from-primary-400/60 hover:to-brand-400/60 dark:bg-dark-700/70'
               "
+              @click="selectLine(line)"
             >
-              <div class="mb-3 flex items-start justify-between gap-3">
-                <div class="flex items-center gap-2">
-                  <span class="text-2xl leading-none">{{ regionEmoji(line.region) }}</span>
-                  <div>
-                    <h3 class="text-base font-semibold text-gray-900 dark:text-white">
-                      {{ line.name }}
-                    </h3>
-                    <p class="text-[11px] uppercase tracking-wide text-gray-500 dark:text-dark-400">
-                      {{ regionLabel(line.region) }}
-                    </p>
+              <div
+                class="flex w-full flex-1 flex-col rounded-[14px] bg-white/90 p-5 backdrop-blur-sm dark:bg-dark-800/90"
+              >
+                <!-- Header row -->
+                <div class="mb-4 flex items-start justify-between gap-3">
+                  <div class="flex items-center gap-3">
+                    <span
+                      class="flex h-10 w-10 items-center justify-center rounded-xl text-xl leading-none"
+                      :class="lineIconBgClass(line.status)"
+                    >
+                      {{ regionEmoji(line.region) }}
+                    </span>
+                    <div>
+                      <h3 class="text-base font-semibold text-gray-900 dark:text-white">
+                        {{ line.name }}
+                      </h3>
+                      <p
+                        class="text-[11px] font-medium uppercase tracking-wider text-gray-400 dark:text-dark-500"
+                      >
+                        {{ regionLabel(line.region) }}
+                      </p>
+                    </div>
+                  </div>
+                  <span
+                    class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-medium"
+                    :class="lineBadgeClass(line.status)"
+                  >
+                    <span
+                      class="h-1.5 w-1.5 rounded-full"
+                      :class="lineDotClass(line.status)"
+                    ></span>
+                    {{ t('home.lines.status.' + line.status) }}
+                  </span>
+                </div>
+
+                <p
+                  v-if="line.description"
+                  class="mb-4 line-clamp-2 text-sm text-gray-600 dark:text-dark-400"
+                >
+                  {{ line.description }}
+                </p>
+
+                <!-- Status bar chart (nowcoding.ai-style) -->
+                <div class="mb-4">
+                  <div class="mb-1.5 flex items-center justify-between text-[11px] uppercase tracking-wider text-gray-400 dark:text-dark-500">
+                    <span>{{ t('home.lines.recentProbes') }}</span>
+                    <span>{{ lineUptimePct(line) }}%</span>
+                  </div>
+                  <div class="flex h-7 items-end gap-[2px]">
+                    <span
+                      v-for="(sample, i) in normalizedSamples(line)"
+                      :key="i"
+                      class="flex-1 rounded-sm transition-all"
+                      :style="{ height: sample.height }"
+                      :class="sample.cls"
+                      :title="sample.title"
+                    ></span>
                   </div>
                 </div>
-                <span
-                  class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium"
-                  :class="lineBadgeClass(line.status)"
-                >
-                  <span class="h-1.5 w-1.5 rounded-full" :class="lineDotClass(line.status)"></span>
-                  {{ t('home.lines.status.' + line.status) }}
-                </span>
+
+                <!-- Metrics row -->
+                <div class="mb-4 grid grid-cols-2 gap-3 border-t border-gray-100 pt-3 dark:border-dark-700/60">
+                  <div>
+                    <div class="text-[11px] uppercase tracking-wider text-gray-400 dark:text-dark-500">
+                      {{ t('home.lines.latency') }}
+                    </div>
+                    <div
+                      class="font-mono text-base font-semibold"
+                      :class="latencyColorClass(line.latency_ms, line.status)"
+                    >
+                      {{ line.status === 'unknown' ? '—' : line.latency_ms + ' ms' }}
+                    </div>
+                  </div>
+                  <div>
+                    <div class="text-[11px] uppercase tracking-wider text-gray-400 dark:text-dark-500">
+                      {{ t('home.lines.uptime') }}
+                    </div>
+                    <div class="font-mono text-base font-semibold text-gray-900 dark:text-white">
+                      {{ lineUptimePct(line) }}%
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Footer row -->
+                <div class="mt-auto flex items-center gap-2">
+                  <span
+                    class="flex-1 rounded-lg px-3 py-1.5 text-center text-xs font-medium transition-all"
+                    :class="
+                      selectedLineId === line.id
+                        ? 'bg-gradient-to-r from-primary-500 to-brand-500 text-white shadow-sm'
+                        : 'bg-gray-100 text-gray-700 group-hover:bg-primary-50 group-hover:text-primary-700 dark:bg-dark-700 dark:text-dark-300'
+                    "
+                  >
+                    {{
+                      selectedLineId === line.id
+                        ? t('home.lines.selected')
+                        : t('home.lines.useLine')
+                    }}
+                  </span>
+                  <a
+                    :href="line.url"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="rounded-lg border border-gray-200 p-1.5 text-gray-500 transition-colors hover:border-primary-300 hover:text-primary-600 dark:border-dark-700 dark:text-dark-400"
+                    :title="line.url"
+                    @click.stop
+                  >
+                    <Icon name="link" size="sm" />
+                  </a>
+                </div>
               </div>
-              <p
-                v-if="line.description"
-                class="mb-3 text-sm text-gray-600 dark:text-dark-400"
-              >
-                {{ line.description }}
-              </p>
-              <div class="mb-4 flex items-center justify-between text-sm">
-                <span class="text-gray-500 dark:text-dark-400">
-                  {{ t('home.lines.latency') }}
-                </span>
-                <span
-                  class="font-mono font-medium"
-                  :class="latencyColorClass(line.latency_ms, line.status)"
-                >
-                  {{ line.status === 'unknown' ? '—' : line.latency_ms + ' ms' }}
-                </span>
-              </div>
-              <div class="mt-auto flex items-center gap-2">
-                <button
-                  type="button"
-                  class="btn btn-secondary flex-1 text-xs"
-                  :class="{
-                    'btn-primary': selectedLineId === line.id
-                  }"
-                  @click="selectLine(line)"
-                >
-                  {{
-                    selectedLineId === line.id
-                      ? t('home.lines.selected')
-                      : t('home.lines.useLine')
-                  }}
-                </button>
-                <a
-                  :href="line.url"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="rounded-lg border border-gray-200 p-2 text-gray-500 transition-colors hover:bg-gray-50 dark:border-dark-700 dark:text-dark-400 dark:hover:bg-dark-700/50"
-                  :title="line.url"
-                >
-                  <Icon name="link" size="sm" />
-                </a>
-              </div>
-            </div>
+            </button>
           </div>
         </section>
       </div>
@@ -646,7 +648,8 @@
 import { ref, computed, onMounted, onBeforeUnmount, reactive } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAuthStore, useAppStore } from '@/stores'
-import LocaleSwitcher from '@/components/common/LocaleSwitcher.vue'
+import PublicHeader from '@/components/layout/PublicHeader.vue'
+import ProviderIcon from '@/components/common/ProviderIcon.vue'
 import Icon from '@/components/icons/Icon.vue'
 import {
   publicAPI,
@@ -664,7 +667,6 @@ const appStore = useAppStore()
 
 // Site settings - directly from appStore (already initialized from injected config)
 const siteName = computed(() => appStore.cachedPublicSettings?.site_name || appStore.siteName || 'Sub2API')
-const siteLogo = computed(() => appStore.cachedPublicSettings?.site_logo || appStore.siteLogo || '')
 const siteSubtitle = computed(() => appStore.cachedPublicSettings?.site_subtitle || 'AI API Gateway Platform')
 const docUrl = computed(() => appStore.cachedPublicSettings?.doc_url || appStore.docUrl || '')
 const homeContent = computed(() => appStore.cachedPublicSettings?.home_content || '')
@@ -685,23 +687,11 @@ const githubUrl = 'https://github.com/Wei-Shaw/sub2api'
 const isAuthenticated = computed(() => authStore.isAuthenticated)
 const isAdmin = computed(() => authStore.isAdmin)
 const dashboardPath = computed(() => isAdmin.value ? '/admin/dashboard' : '/dashboard')
-const userInitial = computed(() => {
-  const user = authStore.user
-  if (!user || !user.email) return ''
-  return user.email.charAt(0).toUpperCase()
-})
 
 // Current year for footer
 const currentYear = computed(() => new Date().getFullYear())
 
-// Toggle theme
-function toggleTheme() {
-  isDark.value = !isDark.value
-  document.documentElement.classList.toggle('dark', isDark.value)
-  localStorage.setItem('theme', isDark.value ? 'dark' : 'light')
-}
-
-// Initialize theme
+// Initialize theme (PublicHeader handles toggling; we just pick the saved value)
 function initTheme() {
   const savedTheme = localStorage.getItem('theme')
   if (
@@ -723,6 +713,16 @@ const health = reactive<PublicHealthResponse>({
 
 const plans = ref<PublicPlan[]>([])
 const serverLines = ref<PublicServerLine[]>([])
+
+// Provider strip for the hero marquee. Order mirrors sssaicode visual rhythm.
+const providerStrip = [
+  { key: 'openai', label: 'OpenAI' },
+  { key: 'anthropic', label: 'Anthropic' },
+  { key: 'gemini', label: 'Gemini' },
+  { key: 'antigravity', label: 'Antigravity' },
+  { key: 'codex', label: 'Codex' },
+  { key: 'bedrock', label: 'Bedrock' }
+] as const
 const selectedLineId = ref<string>(localStorage.getItem('preferredServerLine') || '')
 
 let healthTimer: ReturnType<typeof setInterval> | null = null
@@ -838,6 +838,71 @@ function latencyColorClass(latency: number, status: ServerLineStatus): string {
   return 'text-emerald-600 dark:text-emerald-400'
 }
 
+function lineIconBgClass(status: ServerLineStatus): string {
+  switch (status) {
+    case 'healthy':
+      return 'bg-emerald-50 dark:bg-emerald-900/20'
+    case 'degraded':
+      return 'bg-amber-50 dark:bg-amber-900/20'
+    case 'down':
+      return 'bg-rose-50 dark:bg-rose-900/20'
+    default:
+      return 'bg-gray-100 dark:bg-dark-700'
+  }
+}
+
+function lineUptimePct(line: PublicServerLine): number {
+  const samples = Array.isArray(line.recent_samples) ? line.recent_samples : []
+  if (!samples.length) {
+    return line.status === 'healthy' ? 100 : line.status === 'down' ? 0 : 0
+  }
+  const up = samples.reduce((acc, s) => acc + (s.status === 'healthy' ? 1 : 0), 0)
+  return Math.round((up / samples.length) * 100)
+}
+
+type NormalizedSample = { height: string; cls: string; title: string }
+type SampleKind = 'up' | 'down' | 'empty'
+
+function normalizedSamples(line: PublicServerLine): NormalizedSample[] {
+  const samples = Array.isArray(line.recent_samples) ? line.recent_samples : []
+  // Pad to 30 slots for a visually stable bar strip; backend returns newest-first,
+  // so we reverse for oldest-left/newest-right to match nowcoding.ai visually.
+  const slots = 30
+  const picked = samples.slice(0, slots)
+  const kinds: SampleKind[] = []
+  for (let i = slots - 1; i >= 0; i--) {
+    const sample = picked[i]
+    if (!sample) {
+      kinds.push('empty')
+    } else if (sample.status === 'healthy') {
+      kinds.push('up')
+    } else {
+      kinds.push('down')
+    }
+  }
+  return kinds.map((k) => {
+    if (k === 'up') {
+      return {
+        height: '100%',
+        cls: 'bg-emerald-500/90 dark:bg-emerald-400/80',
+        title: t('home.lines.probeUp')
+      }
+    }
+    if (k === 'down') {
+      return {
+        height: '35%',
+        cls: 'bg-rose-500/90 dark:bg-rose-400/80',
+        title: t('home.lines.probeDown')
+      }
+    }
+    return {
+      height: '18%',
+      cls: 'bg-gray-200 dark:bg-dark-700',
+      title: t('home.lines.probeUnknown')
+    }
+  })
+}
+
 function regionEmoji(region: string): string {
   const key = (region || '').toLowerCase()
   switch (key) {
@@ -929,6 +994,24 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
+/* Provider marquee: two identical tracks translated -50% so the loop is seamless */
+.provider-marquee-track {
+  animation: marquee 40s linear infinite;
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.provider-marquee:hover .provider-marquee-track {
+  animation-play-state: paused;
+}
+
 /* Terminal Container */
 .terminal-container {
   position: relative;

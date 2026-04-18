@@ -1,4 +1,49 @@
 export default {
+  // Public (marketing) header shared across home / models / lines
+  publicHeader: {
+    home: '首页',
+    models: '模型',
+    modelStatus: '模型状态',
+    plans: '套餐',
+    lines: '线路',
+    docs: '文档',
+    signUp: '注册',
+    toggleMenu: '切换菜单'
+  },
+  // Models page (/models) - pricing catalog
+  models: {
+    plaza: {
+      title: '模型广场',
+      subtitle: '浏览可用的 AI 模型及其定价',
+      refresh: '刷新',
+      totalCount: '模型总数'
+    },
+    empty: '暂无模型数据，管理员可启用实时监控或设置 SEED_DEMO=true 预览',
+    filter: {
+      all: '全部',
+      status: '状态',
+      healthy: '正常',
+      degraded: '异常',
+      down: '故障'
+    },
+    card: {
+      input: '输入',
+      output: '输出',
+      cacheRead: '缓存读取',
+      unit: 'USD 每百万 Tokens',
+      copyModelName: '复制模型名',
+      copied: '已复制',
+      availability: '可用率',
+      latency: '平均延迟',
+      ttft: '首 token 延迟',
+      recent: '最近 60 次健康',
+      recentWindow: '每次采样间隔 1 分钟',
+      statusNormal: 'Normal',
+      statusDegraded: 'Degraded',
+      statusDown: 'Down'
+    },
+    refreshed: '最近刷新：{time}'
+  },
   // Home Page
   home: {
     viewOnGithub: '在 GitHub 上查看',
@@ -144,6 +189,11 @@ export default {
       useLine: '使用此线路',
       selected: '已选',
       latency: '延迟',
+      uptime: '可用率',
+      recentProbes: '最近探测',
+      probeUp: '探测正常',
+      probeDown: '探测失败',
+      probeUnknown: '暂无数据',
       region: {
         cn: '中国大陆',
         hk: '中国香港',

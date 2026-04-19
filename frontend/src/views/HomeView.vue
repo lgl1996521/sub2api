@@ -235,7 +235,7 @@
 
         <!-- Trust / Stats Bar -->
         <HomeStatsBar
-          :model-count="health.platforms.reduce((acc, p) => acc + (p.total_accounts || 0), 0) || undefined"
+          :model-count="health.models?.length || undefined"
           :provider-count="health.platforms.length || undefined"
         />
 
@@ -730,7 +730,8 @@ function initTheme() {
 const health = reactive<PublicHealthResponse>({
   enabled: false,
   collected_at: undefined,
-  platforms: []
+  platforms: [],
+  models: []
 })
 
 const plans = ref<PublicPlan[]>([])
@@ -757,6 +758,7 @@ async function loadHealth() {
     health.enabled = Boolean(data.enabled)
     health.collected_at = data.collected_at
     health.platforms = data.platforms ?? []
+    health.models = data.models ?? []
   } catch {
     // Public endpoint, ignore transient failures.
   }

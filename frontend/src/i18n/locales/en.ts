@@ -1,4 +1,82 @@
 export default {
+  // Public (marketing) header shared across home / models / lines
+  publicHeader: {
+    home: 'Home',
+    models: 'Models',
+    modelStatus: 'Model Status',
+    plans: 'Plans',
+    lines: 'Lines',
+    quickstart: 'Quick Start',
+    faq: 'FAQ',
+    docs: 'Docs',
+    signUp: 'Sign up',
+    toggleMenu: 'Toggle menu'
+  },
+  publicFooter: {
+    tagline: 'One API key, unified access to leading AI models. Pay as you go, managed in one place.',
+    columns: {
+      product: 'Product',
+      resources: 'Resources',
+      account: 'Account'
+    },
+    links: {
+      home: 'Home',
+      models: 'Model Plaza',
+      plans: 'Plans',
+      lines: 'Lines',
+      quickstart: 'Quick Start',
+      docs: 'Documentation',
+      faq: 'FAQ',
+      keyUsage: 'Key Usage',
+      dashboard: 'Dashboard',
+      login: 'Sign in',
+      register: 'Sign up',
+      forgotPassword: 'Reset password'
+    },
+    social: {
+      github: 'GitHub repository',
+      docs: 'Developer docs',
+      email: 'Contact email'
+    },
+    status: {
+      operational: 'All systems operational'
+    },
+    builtWith: 'Powered by Sub2API'
+  },
+  // Models page (/models) - pricing catalog
+  models: {
+    plaza: {
+      title: 'Model Plaza',
+      subtitle: 'Browse available AI models and their pricing',
+      refresh: 'Refresh',
+      totalCount: 'Total models'
+    },
+    empty: 'No model data yet. Enable realtime monitoring or set SEED_DEMO=true to preview.',
+    filter: {
+      all: 'All',
+      status: 'Status',
+      healthy: 'Healthy',
+      degraded: 'Degraded',
+      down: 'Down'
+    },
+    card: {
+      input: 'Input',
+      output: 'Output',
+      cacheRead: 'Cache read',
+      unit: 'USD per 1M tokens',
+      copyModelName: 'Copy model name',
+      copied: 'Copied',
+      availability: 'Availability',
+      latency: 'Avg latency',
+      ttft: 'TTFT',
+      recent: 'Recent 60 samples',
+      recentWindow: '1 sample per minute',
+      statusNormal: 'Normal',
+      statusDegraded: 'Degraded',
+      statusDown: 'Down'
+    },
+    refreshed: 'Last refreshed: {time}'
+  },
   // Home Page
   home: {
     viewOnGithub: 'View on GitHub',
@@ -99,6 +177,99 @@ export default {
       antigravity: 'Antigravity',
       more: 'More'
     },
+    // Trust bar / stats
+    stats: {
+      models: 'Models connected',
+      providers: 'Upstream providers',
+      uptime: 'Uptime',
+      latency: 'Avg response'
+    },
+    // Use cases
+    useCases: {
+      title: 'Who it is for',
+      subtitle: 'From solo developers to teams, one service covers the main AI usage scenarios',
+      items: {
+        developer: {
+          title: 'Solo developers',
+          desc: 'A single key to reach major models. Ideal for prototyping and everyday debugging.',
+          bullets: [
+            'OpenAI-compatible SDK, no code rewrite',
+            'Pay only for what you use, no wasted balance',
+            'Multiple lines so overseas models stay reachable'
+          ]
+        },
+        team: {
+          title: 'Small teams',
+          desc: 'Unify account pools and quotas to replace scattered subscriptions.',
+          bullets: [
+            'Sub-accounts and quotas with transparent cost',
+            'Usage breakdown per project and per member',
+            'Alerts and audit logs available at any time'
+          ]
+        },
+        product: {
+          title: 'AI products & agents',
+          desc: 'Built to carry bursty traffic for consumer apps and autonomous agents.',
+          bullets: [
+            'Multi-account scheduling with automatic failover',
+            'Claude, OpenAI and Gemini under one gateway',
+            'Low latency with stable long-context output'
+          ]
+        }
+      }
+    },
+    // Quick start
+    quickstart: {
+      title: 'Up and running in three steps',
+      subtitle: 'Fully compatible with popular SDKs — get started in just a few lines',
+      copy: 'Copy',
+      copied: 'Copied',
+      steps: {
+        register: {
+          title: 'Create an account',
+          desc: 'Sign up with your email and verify to receive free trial credits for evaluation.'
+        },
+        key: {
+          title: 'Generate an API key',
+          desc: 'Create a key in the console and configure its quota and expiration as needed.'
+        },
+        call: {
+          title: 'Send your first request',
+          desc: 'Swap the request base URL for the one this site provides — the rest of your client stays untouched.'
+        }
+      }
+    },
+    // FAQ
+    faq: {
+      title: 'Frequently asked questions',
+      subtitle: 'If your question is not covered here, check the docs or reach out by email',
+      items: {
+        what: {
+          q: 'What is Sub2API?',
+          a: 'Sub2API is an AI API gateway that aggregates multiple upstream model subscriptions into a single OpenAI-compatible endpoint, so individuals and teams can reach Claude, OpenAI, Gemini and more with one key.'
+        },
+        billing: {
+          q: 'How does billing work? Is there a minimum?',
+          a: 'You pay only for the tokens you use — no fixed monthly fee. Plans offer discounted rates, or you can simply top up the wallet. Every charge is visible in the console in real time.'
+        },
+        models: {
+          q: 'Which models are supported?',
+          a: 'We currently support Claude, OpenAI (including GPT-5 and more), Gemini, Antigravity, Codex and other leading models. The live list and pricing are shown on the Model Plaza page, with new models added shortly after upstream release.'
+        },
+        security: {
+          q: 'Are requests logged or used for training?',
+          a: 'Requests are aggregated only for billing and audit purposes and are never used for training. API keys are cached locally in your browser — we do not share your keys or conversation content with third parties.'
+        },
+        migration: {
+          q: 'How do I migrate existing OpenAI code?',
+          a: 'No business-code changes needed. Just switch base_url to the endpoint shown on this site and replace api_key with the key you create here. Python, Node.js and cURL examples are in "Quick Start".'
+        },
+        refund: {
+          q: 'Can I request a refund?',
+          a: 'Unused wallet balance can be refunded per the policy; plans can also be refunded before activation. See the terms of service, or open a ticket / email us to process a refund.'
+        }
+      }
+    },
     // CTA section
     cta: {
       title: 'Ready to Get Started?',
@@ -107,6 +278,65 @@ export default {
     },
     footer: {
       allRightsReserved: 'All rights reserved.'
+    },
+    health: {
+      title: 'Model Health',
+      description: 'Real-time platform availability',
+      lastUpdated: 'Updated at',
+      available: 'Available',
+      rateLimited: 'Rate limited',
+      errored: 'Errored',
+      ofTotal: 'of {total} total',
+      status: {
+        healthy: 'Healthy',
+        degraded: 'Degraded',
+        down: 'Down',
+        unknown: 'Unknown'
+      }
+    },
+    plans: {
+      title: 'Subscription Plans',
+      description: 'Pick a plan that matches your usage',
+      subscribe: 'Subscribe',
+      validity: {
+        day: 'days',
+        days: 'days',
+        week: 'weeks',
+        weeks: 'weeks',
+        month: 'months',
+        months: 'months',
+        year: 'years',
+        years: 'years'
+      }
+    },
+    lines: {
+      title: 'Server Lines',
+      description: 'Choose the best route for your network',
+      useLine: 'Use this line',
+      selected: 'Selected',
+      latency: 'Latency',
+      uptime: 'Uptime',
+      recentProbes: 'Recent probes',
+      probeUp: 'Probe OK',
+      probeDown: 'Probe failed',
+      probeUnknown: 'No data',
+      region: {
+        cn: 'Mainland China',
+        hk: 'Hong Kong',
+        tw: 'Taiwan',
+        jp: 'Japan',
+        sg: 'Singapore',
+        us: 'United States',
+        eu: 'Europe',
+        intl: 'International',
+        global: 'Global'
+      },
+      status: {
+        healthy: 'Online',
+        degraded: 'Degraded',
+        down: 'Offline',
+        unknown: 'Unknown'
+      }
     }
   },
 
@@ -362,7 +592,8 @@ export default {
     orderManagement: 'Orders',
     paymentDashboard: 'Payment Dashboard',
     paymentConfig: 'Payment Config',
-    paymentPlans: 'Plans'
+    paymentPlans: 'Plans',
+    serverLines: 'Server Lines'
   },
 
   // Auth
@@ -3399,6 +3630,40 @@ export default {
       failedToUpdate: 'Failed to update promo code',
       failedToDelete: 'Failed to delete promo code',
       failedToLoadUsages: 'Failed to load usage records'
+    },
+
+    // Server Lines
+    serverLines: {
+      title: 'Server Lines',
+      description: 'Configure the user-selectable gateway endpoints shown on the homepage',
+      addLine: 'Add Line',
+      probeNow: 'Probe Now',
+      empty: 'No server lines configured yet. Click "Add Line" to create one.',
+      saveHint: 'Changes are only persisted after clicking "Save".',
+      moveUp: 'Move up',
+      moveDown: 'Move down',
+      remove: 'Remove',
+      fields: {
+        id: 'ID',
+        name: 'Display Name',
+        region: 'Region',
+        url: 'Base URL',
+        probePath: 'Probe Path',
+        description: 'Description',
+        sortOrder: 'Sort Order',
+        enabled: 'Enabled'
+      },
+      placeholders: {
+        id: 'unique-id',
+        name: 'China Premium Line',
+        description: 'Low-latency line for mainland users'
+      },
+      status: {
+        healthy: 'Online',
+        degraded: 'Degraded',
+        down: 'Offline',
+        unknown: 'Unknown'
+      }
     },
 
     // Usage Records

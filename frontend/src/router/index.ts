@@ -37,6 +37,16 @@ const routes: RouteRecordRaw[] = [
     }
   },
   {
+    path: '/models',
+    name: 'Models',
+    component: () => import('@/views/ModelsView.vue'),
+    meta: {
+      requiresAuth: false,
+      title: 'Model Status',
+      titleKey: 'models.title'
+    }
+  },
+  {
     path: '/login',
     name: 'Login',
     component: () => import('@/views/auth/LoginView.vue'),
@@ -441,6 +451,18 @@ const routes: RouteRecordRaw[] = [
       title: 'Usage Records',
       titleKey: 'admin.usage.title',
       descriptionKey: 'admin.usage.description'
+    }
+  },
+  {
+    path: '/admin/server-lines',
+    name: 'AdminServerLines',
+    component: () => import('@/views/admin/ServerLinesView.vue'),
+    meta: {
+      requiresAuth: true,
+      requiresAdmin: true,
+      title: 'Server Lines',
+      titleKey: 'admin.serverLines.title',
+      descriptionKey: 'admin.serverLines.description'
     }
   },
 

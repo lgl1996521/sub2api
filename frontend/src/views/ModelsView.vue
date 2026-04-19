@@ -256,9 +256,7 @@
       </div>
     </main>
 
-    <footer class="relative z-10 mt-10 border-t border-gray-200/50 px-6 py-6 text-center text-xs text-gray-500 dark:border-dark-800/50 dark:text-dark-400">
-      &copy; {{ new Date().getFullYear() }} {{ siteName }}
-    </footer>
+    <PublicFooter />
   </div>
 </template>
 
@@ -266,17 +264,12 @@
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import PublicHeader from '@/components/layout/PublicHeader.vue'
+import PublicFooter from '@/components/layout/PublicFooter.vue'
 import ProviderIcon from '@/components/common/ProviderIcon.vue'
 import Icon from '@/components/icons/Icon.vue'
-import { useAppStore } from '@/stores'
 import { publicAPI, type PlatformHealthStatus, type PublicModelItem } from '@/api/public'
 
 const { t, locale } = useI18n()
-const appStore = useAppStore()
-
-const siteName = computed(
-  () => appStore.cachedPublicSettings?.site_name || appStore.siteName || 'Sub2API'
-)
 
 const models = ref<PublicModelItem[]>([])
 const collectedAt = ref<string | undefined>(undefined)

@@ -233,6 +233,12 @@
           </div>
         </div>
 
+        <!-- Trust / Stats Bar -->
+        <HomeStatsBar
+          :model-count="health.platforms.reduce((acc, p) => acc + (p.total_accounts || 0), 0) || undefined"
+          :provider-count="health.platforms.length || undefined"
+        />
+
         <!-- Supported Providers -->
         <div class="mb-8 text-center">
           <h2 class="mb-3 text-2xl font-bold text-gray-900 dark:text-white">
@@ -609,38 +615,55 @@
             </button>
           </div>
         </section>
+
+        <!-- Section: Use Cases -->
+        <HomeUseCases />
+
+        <!-- Section: Quick Start -->
+        <HomeQuickStart />
+
+        <!-- Section: FAQ -->
+        <HomeFAQ />
+
+        <!-- Section: CTA -->
+        <section class="mb-16">
+          <div
+            class="relative overflow-hidden rounded-3xl border border-primary-500/20 bg-gradient-to-br from-primary-600 via-primary-500 to-brand-500 p-8 text-center shadow-xl shadow-primary-500/20 sm:p-12"
+          >
+            <div class="pointer-events-none absolute inset-0 opacity-30 [background:radial-gradient(circle_at_20%_0%,rgba(255,255,255,0.35),transparent_50%),radial-gradient(circle_at_80%_100%,rgba(255,255,255,0.2),transparent_45%)]"></div>
+            <div class="relative z-10">
+              <h2 class="mb-3 text-2xl font-bold text-white md:text-3xl">
+                {{ t('home.cta.title') }}
+              </h2>
+              <p class="mx-auto mb-6 max-w-xl text-sm text-white/85 md:text-base">
+                {{ t('home.cta.description') }}
+              </p>
+              <div class="flex flex-wrap items-center justify-center gap-3">
+                <router-link
+                  :to="isAuthenticated ? dashboardPath : '/register'"
+                  class="inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3 text-sm font-semibold text-primary-700 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-lg"
+                >
+                  {{ isAuthenticated ? t('home.goToDashboard') : t('home.cta.button') }}
+                  <Icon name="arrowRight" size="sm" />
+                </router-link>
+                <a
+                  v-if="docUrl"
+                  :href="docUrl"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="inline-flex items-center gap-2 rounded-xl border border-white/30 bg-white/10 px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm transition-all hover:bg-white/20"
+                >
+                  {{ t('home.viewDocs') }}
+                  <Icon name="externalLink" size="sm" />
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
       </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="relative z-10 border-t border-gray-200/50 px-6 py-8 dark:border-dark-800/50">
-      <div
-        class="mx-auto flex max-w-6xl flex-col items-center justify-center gap-4 text-center sm:flex-row sm:text-left"
-      >
-        <p class="text-sm text-gray-500 dark:text-dark-400">
-          &copy; {{ currentYear }} {{ siteName }}. {{ t('home.footer.allRightsReserved') }}
-        </p>
-        <div class="flex items-center gap-4">
-          <a
-            v-if="docUrl"
-            :href="docUrl"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="text-sm text-gray-500 transition-colors hover:text-gray-700 dark:text-dark-400 dark:hover:text-white"
-          >
-            {{ t('home.docs') }}
-          </a>
-          <a
-            :href="githubUrl"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="text-sm text-gray-500 transition-colors hover:text-gray-700 dark:text-dark-400 dark:hover:text-white"
-          >
-            GitHub
-          </a>
-        </div>
-      </div>
-    </footer>
+    <PublicFooter />
   </div>
 </template>
 
@@ -649,8 +672,13 @@ import { ref, computed, onMounted, onBeforeUnmount, reactive } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAuthStore, useAppStore } from '@/stores'
 import PublicHeader from '@/components/layout/PublicHeader.vue'
+import PublicFooter from '@/components/layout/PublicFooter.vue'
 import ProviderIcon from '@/components/common/ProviderIcon.vue'
 import Icon from '@/components/icons/Icon.vue'
+import HomeStatsBar from '@/components/home/HomeStatsBar.vue'
+import HomeUseCases from '@/components/home/HomeUseCases.vue'
+import HomeQuickStart from '@/components/home/HomeQuickStart.vue'
+import HomeFAQ from '@/components/home/HomeFAQ.vue'
 import {
   publicAPI,
   type PublicPlan,
@@ -680,16 +708,10 @@ const isHomeContentUrl = computed(() => {
 // Theme
 const isDark = ref(document.documentElement.classList.contains('dark'))
 
-// GitHub URL
-const githubUrl = 'https://github.com/Wei-Shaw/sub2api'
-
 // Auth state
 const isAuthenticated = computed(() => authStore.isAuthenticated)
 const isAdmin = computed(() => authStore.isAdmin)
 const dashboardPath = computed(() => isAdmin.value ? '/admin/dashboard' : '/dashboard')
-
-// Current year for footer
-const currentYear = computed(() => new Date().getFullYear())
 
 // Initialize theme (PublicHeader handles toggling; we just pick the saved value)
 function initTheme() {

@@ -6,9 +6,42 @@ export default {
     modelStatus: '模型状态',
     plans: '套餐',
     lines: '线路',
+    quickstart: '快速开始',
+    faq: '常见问题',
     docs: '文档',
     signUp: '注册',
     toggleMenu: '切换菜单'
+  },
+  publicFooter: {
+    tagline: '一个密钥接入多家主流 AI 模型，按量计费、统一管理、开箱即用。',
+    columns: {
+      product: '产品',
+      resources: '资源',
+      account: '账户'
+    },
+    links: {
+      home: '首页',
+      models: '模型广场',
+      plans: '套餐',
+      lines: '线路',
+      quickstart: '快速开始',
+      docs: '开发文档',
+      faq: '常见问题',
+      keyUsage: 'Key 用量查询',
+      dashboard: '控制台',
+      login: '登录',
+      register: '注册',
+      forgotPassword: '找回密码'
+    },
+    social: {
+      github: 'GitHub 仓库',
+      docs: '开发文档',
+      email: '联系邮箱'
+    },
+    status: {
+      operational: '服务运行正常'
+    },
+    builtWith: '由 Sub2API 驱动'
   },
   // Models page (/models) - pricing catalog
   models: {
@@ -143,6 +176,87 @@ export default {
       gemini: 'Gemini',
       antigravity: 'Antigravity',
       more: '更多'
+    },
+    // Trust bar / stats
+    stats: {
+      models: '接入模型',
+      providers: '上游服务商',
+      uptime: '可用率',
+      latency: '平均响应'
+    },
+    // Use cases
+    useCases: {
+      title: '适合谁使用',
+      subtitle: '从个人到团队，一套服务覆盖主要 AI 使用场景',
+      items: {
+        developer: {
+          title: '个人开发者',
+          desc: '一个 Key 直通主流模型，调试与原型开发更顺手。',
+          bullets: ['兼容 OpenAI SDK，零改造接入', '按实际用量计费，不浪费余额', '多线路可选，海外模型稳定直连']
+        },
+        team: {
+          title: '协作团队',
+          desc: '统一账号池与配额，减少零散订阅和重复采购。',
+          bullets: ['子账号与配额管理，费用透明', '按项目/成员维度查看用量明细', '异常告警与日志审计随时可查']
+        },
+        product: {
+          title: 'AI 产品与 Agent',
+          desc: '面向 C 端应用与 Agent 场景，稳定承载高并发调用。',
+          bullets: ['多账号自动调度与故障转移', '支持 Claude、OpenAI、Gemini 多家模型', '响应延迟低，长上下文稳定输出']
+        }
+      }
+    },
+    // Quick start
+    quickstart: {
+      title: '三步快速上手',
+      subtitle: '完全兼容主流 SDK，几行代码即可跑通',
+      copy: '复制',
+      copied: '已复制',
+      steps: {
+        register: {
+          title: '注册账号',
+          desc: '使用邮箱注册并完成登录，新账号即可获得免费额度用于体验。'
+        },
+        key: {
+          title: '创建 API Key',
+          desc: '在控制台中生成一枚 Key，并按需设置使用限额与过期时间。'
+        },
+        call: {
+          title: '发起 API 请求',
+          desc: '将请求地址替换为本站提供的接入域名，其余参数保持不变即可调用。'
+        }
+      }
+    },
+    // FAQ
+    faq: {
+      title: '常见问题',
+      subtitle: '如果这里没有你的问题，可以通过文档或邮件联系我们',
+      items: {
+        what: {
+          q: 'Sub2API 是什么？',
+          a: 'Sub2API 是一个 AI API 中转平台，将多家上游模型订阅聚合成标准的 OpenAI 兼容接口，方便个人和团队通过一个 Key 调用 Claude、OpenAI、Gemini 等主流模型。'
+        },
+        billing: {
+          q: '如何计费？是否有最低消费？',
+          a: '按实际 Token 用量计费，不用不扣费，没有固定月费。你可以通过订阅套餐获取优惠费率，也可以直接使用钱包余额，消费明细在控制台中实时可见。'
+        },
+        models: {
+          q: '都支持哪些模型？'  ,
+          a: '目前已接入 Claude、OpenAI (含 GPT-5 等)、Gemini、Antigravity、Codex 等主流模型。具体可用模型与单价请以「模型广场」页面展示为准，新模型会在上游发布后尽快接入。'
+        },
+        security: {
+          q: '请求数据会被记录或用于训练吗？',
+          a: '请求会匿名化地用于账单统计与用量审计，不会用于模型训练。API Key 仅在浏览器本地缓存，我们不会泄露你的 Key 或对话内容给第三方。'
+        },
+        migration: {
+          q: '已有基于 OpenAI 的代码如何迁移？',
+          a: '无需改动业务代码，只需把 base_url 改为本站接入地址、将 api_key 替换为平台签发的 Key 即可。常见的 Python、Node.js、cURL 示例见「快速开始」。'
+        },
+        refund: {
+          q: '余额可以退款吗？',
+          a: '钱包余额支持未使用部分按规则申请退款，订阅套餐在未激活前同样可以申请。具体条款请参考用户协议，或通过工单/邮箱联系我们处理。'
+        }
+      }
     },
     // CTA 区块
     cta: {

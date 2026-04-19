@@ -6,9 +6,42 @@ export default {
     modelStatus: 'Model Status',
     plans: 'Plans',
     lines: 'Lines',
+    quickstart: 'Quick Start',
+    faq: 'FAQ',
     docs: 'Docs',
     signUp: 'Sign up',
     toggleMenu: 'Toggle menu'
+  },
+  publicFooter: {
+    tagline: 'One API key, unified access to leading AI models. Pay as you go, managed in one place.',
+    columns: {
+      product: 'Product',
+      resources: 'Resources',
+      account: 'Account'
+    },
+    links: {
+      home: 'Home',
+      models: 'Model Plaza',
+      plans: 'Plans',
+      lines: 'Lines',
+      quickstart: 'Quick Start',
+      docs: 'Documentation',
+      faq: 'FAQ',
+      keyUsage: 'Key Usage',
+      dashboard: 'Dashboard',
+      login: 'Sign in',
+      register: 'Sign up',
+      forgotPassword: 'Reset password'
+    },
+    social: {
+      github: 'GitHub repository',
+      docs: 'Developer docs',
+      email: 'Contact email'
+    },
+    status: {
+      operational: 'All systems operational'
+    },
+    builtWith: 'Powered by Sub2API'
   },
   // Models page (/models) - pricing catalog
   models: {
@@ -143,6 +176,99 @@ export default {
       gemini: 'Gemini',
       antigravity: 'Antigravity',
       more: 'More'
+    },
+    // Trust bar / stats
+    stats: {
+      models: 'Models connected',
+      providers: 'Upstream providers',
+      uptime: 'Uptime',
+      latency: 'Avg response'
+    },
+    // Use cases
+    useCases: {
+      title: 'Who it is for',
+      subtitle: 'From solo developers to teams, one service covers the main AI usage scenarios',
+      items: {
+        developer: {
+          title: 'Solo developers',
+          desc: 'A single key to reach major models. Ideal for prototyping and everyday debugging.',
+          bullets: [
+            'OpenAI-compatible SDK, no code rewrite',
+            'Pay only for what you use, no wasted balance',
+            'Multiple lines so overseas models stay reachable'
+          ]
+        },
+        team: {
+          title: 'Small teams',
+          desc: 'Unify account pools and quotas to replace scattered subscriptions.',
+          bullets: [
+            'Sub-accounts and quotas with transparent cost',
+            'Usage breakdown per project and per member',
+            'Alerts and audit logs available at any time'
+          ]
+        },
+        product: {
+          title: 'AI products & agents',
+          desc: 'Built to carry bursty traffic for consumer apps and autonomous agents.',
+          bullets: [
+            'Multi-account scheduling with automatic failover',
+            'Claude, OpenAI and Gemini under one gateway',
+            'Low latency with stable long-context output'
+          ]
+        }
+      }
+    },
+    // Quick start
+    quickstart: {
+      title: 'Up and running in three steps',
+      subtitle: 'Fully compatible with popular SDKs — get started in just a few lines',
+      copy: 'Copy',
+      copied: 'Copied',
+      steps: {
+        register: {
+          title: 'Create an account',
+          desc: 'Sign up with your email and verify to receive free trial credits for evaluation.'
+        },
+        key: {
+          title: 'Generate an API key',
+          desc: 'Create a key in the console and configure its quota and expiration as needed.'
+        },
+        call: {
+          title: 'Send your first request',
+          desc: 'Swap the request base URL for the one this site provides — the rest of your client stays untouched.'
+        }
+      }
+    },
+    // FAQ
+    faq: {
+      title: 'Frequently asked questions',
+      subtitle: 'If your question is not covered here, check the docs or reach out by email',
+      items: {
+        what: {
+          q: 'What is Sub2API?',
+          a: 'Sub2API is an AI API gateway that aggregates multiple upstream model subscriptions into a single OpenAI-compatible endpoint, so individuals and teams can reach Claude, OpenAI, Gemini and more with one key.'
+        },
+        billing: {
+          q: 'How does billing work? Is there a minimum?',
+          a: 'You pay only for the tokens you use — no fixed monthly fee. Plans offer discounted rates, or you can simply top up the wallet. Every charge is visible in the console in real time.'
+        },
+        models: {
+          q: 'Which models are supported?',
+          a: 'We currently support Claude, OpenAI (including GPT-5 and more), Gemini, Antigravity, Codex and other leading models. The live list and pricing are shown on the Model Plaza page, with new models added shortly after upstream release.'
+        },
+        security: {
+          q: 'Are requests logged or used for training?',
+          a: 'Requests are aggregated only for billing and audit purposes and are never used for training. API keys are cached locally in your browser — we do not share your keys or conversation content with third parties.'
+        },
+        migration: {
+          q: 'How do I migrate existing OpenAI code?',
+          a: 'No business-code changes needed. Just switch base_url to the endpoint shown on this site and replace api_key with the key you create here. Python, Node.js and cURL examples are in "Quick Start".'
+        },
+        refund: {
+          q: 'Can I request a refund?',
+          a: 'Unused wallet balance can be refunded per the policy; plans can also be refunded before activation. See the terms of service, or open a ticket / email us to process a refund.'
+        }
+      }
     },
     // CTA section
     cta: {

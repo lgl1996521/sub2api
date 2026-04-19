@@ -174,9 +174,9 @@ const navItems = computed<NavItem[]>(() => {
   const items: NavItem[] = [
     { key: 'publicHeader.home', href: '/home', hash: '' },
     { key: 'publicHeader.models', href: '/models' },
-    { key: 'publicHeader.modelStatus', href: '/home#health', hash: 'health' },
     { key: 'publicHeader.plans', href: '/home#plans', hash: 'plans' },
-    { key: 'publicHeader.lines', href: '/home#lines', hash: 'lines' }
+    { key: 'publicHeader.quickstart', href: '/home#quickstart', hash: 'quickstart' },
+    { key: 'publicHeader.faq', href: '/home#faq', hash: 'faq' }
   ]
   if (docUrl.value) {
     items.push({ key: 'publicHeader.docs', href: docUrl.value, external: true })
